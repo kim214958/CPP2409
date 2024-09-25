@@ -13,13 +13,13 @@ int main(){
         //문제 출력
         cout<<firstNum<<" + "<<secondNum<<" = ";
         cin>>ans;
-        if(ans == (firstNum+secondNum)){
+        if(ans == (firstNum+secondNum)){// 문제와 정답 비교
             cout <<"정답입니다!"<<endl;
-            break;
+            break;// 정답이면 종료
         }
         else{
-            cout <<"오답입니다."<<endl;
-            continue;
+            cout <<"오답입니다."<<endl; 
+            continue;//오답이면 재시도
         }
     }
     return 0;

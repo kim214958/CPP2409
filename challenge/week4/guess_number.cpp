@@ -15,7 +15,7 @@ int main(){
 
     
 
-        if(guess!=answer){
+        if(guess!=answer){// 오답이면 힌트 제공
         cout<<"오답입니다. 다시 시도하십시오."<<endl;
         tries++;
             if(guess>answer)
@@ -24,7 +24,7 @@ int main(){
             cout<<"제시한 숫자가 작습니다."<<endl;
         }
 
-    } while (guess != answer);
+    } while (guess != answer);// 정답이 아니면 반복 실행
 
 
     cout << "축하합니다. 시도 회수=" << tries << endl;
