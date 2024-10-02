@@ -132,7 +132,7 @@ int main(){
 
         // 7. 모든 칸이 다 차면 종료
         if(countspace == (numCell)*(numCell)){
-            cout <<"모든 칸이 다 찼습니다."<<endl;
+            cout <<"모든 칸이 다 찼습니다. 종료합니다"<<endl;
             return 0;
         }
         
