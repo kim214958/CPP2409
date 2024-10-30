@@ -1,6 +1,6 @@
 //car 헤더파일 호출
 #include "car.h"
-
+using namespace std;
 
 int main(){
     // Car클래스의 객체 생성

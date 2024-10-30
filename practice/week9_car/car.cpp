@@ -5,7 +5,7 @@
 int Car::getSpeed(){
     return speed;
 }
-// Car 인터페이스의 ㄴetSpeed()함수 구현
+// Car 인터페이스의 setSpeed()함수 구현
 void Car::setSpeed(int s){
     speed = s;
 }
