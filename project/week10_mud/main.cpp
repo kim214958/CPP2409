@@ -3,10 +3,10 @@
 #include "user.h"
 using namespace std;
 
-User user();
+User user; // User 객체 user 생성
+
 const int mapX = 5; // 지도의 x크기
 const int mapY = 5; // 지도의 y크기
-//int health = 20; // 플레이어의 체력 초기값 20
 
 // 유저의 위치를 저장할 변수
 int user_x = 0; // 가로 번호
@@ -18,6 +18,7 @@ void displayMap(int map[][mapX]);
 bool checkGoal(int map[][mapX]);
 bool nextpoint(int dx, int dy, int map[][mapX]);
 void checkEvent(int map[][mapX]);
+bool CheckUser(User user);
 
 // 메인  함수
 int main() {
@@ -84,14 +85,16 @@ int main() {
 			break;
 		}
 
-		//체력이 0이하면 게임을 종료
-		if(health<=0){
+		// 문제에서는 CheckUser는 hp가 0인지 확인하는 함수이지만, 종료조건을 CheckUser만 사용하면 로직에 오류가 생긴다.
+		// 예를 들어 피가 1 남은 상태로 적을 만나면 피가 -2가 되므로 게임이 정상적으로 종료되지 않는다.
+		// 이를 해결하기 위해서는 CheckUser의 조건을 0 이하로 수정하거나 아래의 조건처럼 수정해야한다.
+		if(!CheckUser(user)||user.GetHP()<=0){ // CheckUser(user)가 false (user.hp == 0이면 false를 반환)이거나, user.GetHP()의 반환값 hp가 음수이면 if문을 실행
 			cout << "HP가 0 이하가 되었습니다. 실패했습니다." << endl;
 			break;
 		}
-
 		//남은 체력을 표시해줌
-		cout<<"현재 HP: "<<health<<" ";
+		else
+			cout<<"현재 HP: "<<user.GetHP()<<" "; // user.GetHP()의 반환값 user.hp를 표시
 
 	}
 	//반복문이 종료되면 프로그램 종료
@@ -159,7 +162,7 @@ bool nextpoint(int dx, int dy, int map[][mapX]) {
         user_y = user_y + dy; // 이동
         displayMap(map); // 이동 후 지도 표시
         cout << "이동했습니다." << endl;
-		user.DecreaseHP(1); // 유효한 이동 후 체력을 1 감소
+		user.DecreaseHP(1); // 유효한 이동 후 체력을 1 감소, user 객체의 DecreaseHP(1)을 통해 객체의 hp 변수를 1 감소시킨다.
 		return true; // 유효한 이동이면 true를 반환
     }
 	// 이동하려는 좌표가 유효하지 않은 좌표이면 실행 
@@ -182,10 +185,26 @@ void checkEvent(int map[][mapX]) {
 			break;
 		case 2:
 			cout<< "적이 있습니다. HP가 2 줄어듭니다."<<endl;
-			user.DecreaseHP(2);
+			user.DecreaseHP(2); // 적을 만나면 user 객체의 DecreaseHP(2)을 통해 객체의 hp 변수를 2 감소시킨다.
 			break;
 		case 3:
 			cout<< "포션이 있습니다. HP가 2 늘어납니다."<<endl;
-			user.IncreaseHP(2); // 포션을 만나면 체력 2 증가
+			user.IncreaseHP(2); // 포션을 만나면 user 객체의 IncreaseHP(2)을 통해  user 객체의 hp 변수를 2 증가시킨다.
+			break;
 	}
 }
+// User의 hp가 0인지 체크하는 함수
+bool CheckUser(User user){
+	if(user.GetHP()==0) // 매개변수 객체의 GetHP를 통해 hp를 받아냄, 받은 값이 0이면 false를 반환
+		return false;
+	else
+		return true; // 반환받은 값이 0이 아니면 true를 반환
+}
+
+// 아래와 같이 작성해야 CheckUser 함수 하나만 호출해도 종료조건을 확인할 수 있다.
+/*bool CheckUser(User user){
+	if(user.GetHP()<=0)
+		return false;
+	else
+		return true;
+} */
