@@ -17,6 +17,6 @@ void User::IncreaseHP(int inc_hp) { // hp를 증가시키는 함수
 void User::IncreaseCnt(int inc_cnt){ // itemCnt를 증가시키는 함수
 	itemCnt += inc_cnt; // 매개변수의 값만큼 itemcnt를 증가시킨다.
 }
-void User::doAttack(){
+void User::DoAttack(){
 	cout << "공격합니다" << endl;
 }
