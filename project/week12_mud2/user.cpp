@@ -20,5 +20,3 @@ void User::IncreaseCnt(int inc_cnt){ // itemCnt를 증가시키는 함수
 void User::doAttack(){
 	cout << "공격합니다" << endl;
 }
-
-
