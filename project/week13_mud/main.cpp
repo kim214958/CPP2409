@@ -18,89 +18,11 @@ bool checkGoal(vector<vector<int>> map, int x, int y);
 bool nextpoint(int &x, int &y, int dx, int dy, vector<vector<int>> map, User *&current_player);
 void checkEvent(vector<vector<int>> map, User *&user, int x, int y);
 bool CheckUser(User *user);
-// User를 상속한 마법사 클래스
-class Magician : public User
-{
-public:
-    Magician() : User()
-    {
-        hp = 10;
-        item_cnt = 0;
-    }
-
-    int GetHP()
-    {              // 캡슐의 getter
-        return hp; // hp를 리턴
-    };
-    void DecreaseHP(int dec_hp)
-    {                 // hp를 감소시키는 함수
-        hp -= dec_hp; // 매개변수의 값만큼 hp를 감소시킨다.
-    };
-    void IncreaseHP(int inc_hp)
-    {                 // hp를 증가시키는 함수
-        hp += inc_hp; // 매개변수의 값만큼 hp를 증가시킨다.
-    }
-    void IncreaseCnt(int inc_cnt)
-    {                        // itemCnt를 증가시키는 함수
-        item_cnt += inc_cnt; // 매개변수의 값만큼 itemcnt를 증가시킨다.
-    }
-    // User의 DoAttack()을 오버라이딩
-    void DoAttack() override
-    {
-        cout << "마법 사용" << endl;
-    }
-    friend ostream &operator<<(ostream &os, const Magician &player)
-    {
-        os << "현재 HP는 " << player.hp << "이고, "
-           << "먹은 아이템은 총 " << player.item_cnt << "개 입니다.";
-        return os;
-    }
-};
-
-// User를 상속한 워리어 클래스
-class Warrior : public User
-{
-public:
-    Warrior() : User()
-    {
-        hp = 10;
-        item_cnt = 0;
-    }
-
-    int GetHP()
-    {              // 캡슐의 getter
-        return hp; // hp를 리턴
-    };
-    void DecreaseHP(int dec_hp)
-    {                 // hp를 감소시키는 함수
-        hp -= dec_hp; // 매개변수의 값만큼 hp를 감소시킨다.
-    };
-    void IncreaseHP(int inc_hp)
-    {                 // hp를 증가시키는 함수
-        hp += inc_hp; // 매개변수의 값만큼 hp를 증가시킨다.
-    }
-    void IncreaseCnt(int inc_cnt)
-    {                        // itemCnt를 증가시키는 함수
-        item_cnt += inc_cnt; // 매개변수의 값만큼 itemcnt를 증가시킨다.
-    }
-    // User의 DoAttack()을 오버라이딩
-    void DoAttack() override
-    {
-        cout << "베기 사용" << endl;
-    }
-    friend ostream &operator<<(ostream &os, const Warrior* &player)
-    {
-        os << "현재 HP는 " << player->hp << "이고, "
-           << "먹은 아이템은 총 " << player->item_cnt << "개 입니다.";
-        return os;
-    }
-    
-};
 
 // 메인  함수
 int main()
 {
-    User *user; // 유저 생성
+    User *user; // 유저 객체
     string job; // 직업
     // 직업 선택
     while (true)
@@ -108,17 +30,17 @@ int main()
         cout << "직업을 선택하세요: (magician, warrior)" << endl;
         cin >> job;
         if (job == "magician")
-        {
-            user = new Magician;
+        {   // 자식 클래스 Magician으로 유저객체를 upcasting
+            user = new Magician();
             break;
         }
         else if (job == "warrior")
         {
-            user = new Warrior;
+            user = new Warrior();
             break;
         }
         else
-        {
+        {   // 자식 클래스 Warrior로 유저객체를 upcasting
             cout << "잘못된 입력입니다." << endl;
             continue;
         }
@@ -190,7 +112,7 @@ int main()
         }
         else if (user_input == "info")
         {
-            cout << user << endl;
+            cout << user << endl; // 포인터를 역참조하여 출력
         }
         else if (user_input == "attack")
         {
@@ -205,7 +127,7 @@ int main()
 
         if (checkGoal(map, user_x, user_y))
         { // 목표 도달 여부 확인. 골을 달성하는 시점에는 턴이 넘어간 상태이다(행동 후 턴을 넘김) 그러므로 전 턴의 플레이어가 도착한 것이다.
-            cout << user << "이(가) 목적지에 도착했습니다! 축하합니다!" << endl;
+            cout << "User가 목적지에 도착했습니다! 축하합니다!" << endl;
             break;
         }
 
@@ -216,7 +138,7 @@ int main()
         // 실패하는 시점에는 턴이 넘어간 상태이다(행동 후 턴을 넘김) 그러므로 전 턴의 플레이어가 실패한 것이다.
         if (user->GetHP() <= 0)
         { // CheckUser(user)가 false (user.hp == 0이면 false를 반환)이거나, user.GetHP()의 반환값 hp가 음수이면 if문을 실행
-            cout << user << "의 HP가 0 이하가 되었습니다. 실패했습니다." << endl;
+            cout << "User의 HP가 0 이하가 되었습니다. 실패했습니다." << endl;
             break;
         }
     }
