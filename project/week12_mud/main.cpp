@@ -6,19 +6,38 @@ using namespace std;
 
 User user; // User 객체 user 생성
 
-const int mapX = 5; // 지도의 x크기
-const int mapY = 5; // 지도의 y크기
+class Magician : public User{
+	void doAttack(){
+		cout << "마법 사용" << endl;
+	}
+};
+
+class Warrior : public User{
+	void doAttack(){
+		cout << "베기 사용" << endl;
+	}
+};
+
+Magician magician;
+Warrior warrior;
+
+const int map_x = 5; // 지도의 x크기
+const int map_y = 5; // 지도의 y크기
 
 // 유저의 위치를 저장할 변수
 int user_x = 0; // 가로 번호
 int user_y = 0; // 세로 번호
 
+int magician_x = 0, magician_y = 0;
+int warrior_x = 0, warrior_y = 0;
+int current_turn = 0; // 0이면 Magician, 1이면 Warrior
+
 // 사용자 정의 함수
 bool checkXY(int user_x,int user_y);
 void displayMap(vector<vector<int>>map);
-bool checkGoal(vector<vector<int>>map);
-bool nextpoint(int dx, int dy, vector<vector<int>>map);
-void checkEvent(vector<vector<int>>map);
+bool checkGoal(vector<vector<int>>map, int x, int y);
+bool nextpoint(int &x, int &y, int dx, int dy, vector<vector<int>>map);
+void checkEvent(vector<vector<int>>map, User &user, int x, int y);
 bool CheckUser(User user);
 
 // 메인  함수
@@ -35,6 +54,14 @@ int main() {
 	// 게임 시작 
 	while (1) { // 사용자에게 계속 입력받기 위해 무한 루프
 
+		// current_turn이 0이면 마법사, 1이면 전사
+		User &currentPlayer = (current_turn == 0) ? (User&)magician : (User&)warrior;
+		int &x = (current_turn == 0) ? magician_x : warrior_x;
+        int &y = (current_turn == 0) ? magician_y : warrior_y;
+
+		// 사용자의 차례를 표시해줌
+		cout << (current_turn == 0 ? "Magician의 턴" : "Warrior의 턴") << endl;
+
 		// 사용자의 입력을 저장할 변수
 		string user_input = "";
 
@@ -47,21 +74,25 @@ int main() {
             correctmove = nextpoint( 0, -1, map); //이동하는 함수, 유효한 이동이면 true를 correctmove에 반환
 			if(correctmove)
 				checkEvent(map); //유효한 이동이면 event가 있는지 확인&발생
+
         }
         else if (user_input == "down") {
             correctmove = nextpoint( 0, 1, map); // 위와 동
 			if(correctmove)
 				checkEvent(map); // 위와 동
+	
         }
         else if (user_input == "left") {
             correctmove = nextpoint( -1, 0, map); // 위와 동
 			if(correctmove)
 				checkEvent(map); // 위와 동
+
         }
         else if (user_input == "right") {
             correctmove = nextpoint( 1, 0, map); // 위와 동
 			if(correctmove)
 				checkEvent(map); // 위와 동
+
         }
 		else if (user_input == "map") {
 			// TODO: 지도 보여주기 함수 호출
@@ -109,11 +140,13 @@ int main() {
 
 // 지도와 사용자 위치 출력하는 함수
 void displayMap(vector<vector<int>>map) {
-	for (int i = 0; i < mapY; i++) {
-		for (int j = 0; j < mapX; j++) {
-			if (i == user_y && j == user_x) {
-				cout << " USER |"; // 양 옆 1칸 공백
-			}
+	for (int i = 0; i < map_y; i++) {
+		for (int j = 0; j < map_x; j++) {
+			if (i == magician_y && j == magician_x) {
+                cout << "MAGIC |";
+            } else if (i == warrior_y && j == warrior_x) {
+                cout << "WARRIOR|";
+					}
 			else {
 				int posState = map[i][j];
 				switch (posState) {
@@ -143,7 +176,7 @@ void displayMap(vector<vector<int>>map) {
 // 이동하려는 곳이 유효한 좌표인지 체크하는 함수
 bool checkXY(int user_x, int user_y) {
 	bool checkFlag = false;
-	if (user_x >= 0 && user_x < mapX && user_y >= 0 && user_y < mapY) { //유효한 좌표이면 true를 반환
+	if (user_x >= 0 && user_x < map_x && user_y >= 0 && user_y < map_y) { //유효한 좌표이면 true를 반환
 		checkFlag = true;
 	}
 	return checkFlag;
