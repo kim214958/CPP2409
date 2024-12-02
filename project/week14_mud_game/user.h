@@ -49,5 +49,3 @@ public:
 	void IncreaseCnt(int inc_cnt) override;
 	void DoAttack() override;
 };
-
-

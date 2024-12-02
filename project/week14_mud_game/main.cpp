@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <fstream>
 #include "user.h"
 using namespace std;
 
@@ -30,7 +31,7 @@ int main()
         cout << "직업을 선택하세요: (magician, warrior)" << endl;
         cin >> job;
         if (job == "magician")
-        {   // 자식 클래스 Magician으로 유저객체를 upcasting
+        { // 자식 클래스 Magician으로 유저객체를 upcasting
             user = new Magician();
             break;
         }
@@ -40,18 +41,47 @@ int main()
             break;
         }
         else
-        {   // 자식 클래스 Warrior로 유저객체를 upcasting
+        { // 자식 클래스 Warrior로 유저객체를 upcasting
             cout << "잘못된 입력입니다." << endl;
             continue;
         }
     }
 
-    // 0은 빈 공간, 1은 아이템, 2는 적, 3은 포션, 4는 목적지
-    vector<vector<int>> map = {{0, 1, 2, 0, 4},
-                               {1, 0, 0, 2, 0},
-                               {0, 0, 0, 0, 0},
-                               {0, 2, 3, 0, 0},
-                               {3, 0, 0, 0, 2}};
+    // 맵 생성
+    int rows = 5; // 텍스트 파일의 행 개수 설정
+    int cols = 5; // 텍스트 파일의 열 개수 설정
+    vector<vector<int>> map(rows, vector<int>(cols)); // 이차원 벡터 초기화
+    // 맵 벡터 생성 예외 처리
+    try
+    {
+        ifstream is("map.txt");
+        if (!is)
+        {
+            cerr << "파일 오픈에 실패하였습니다." << endl;
+            exit(1);
+        }
+
+        // 행 또는 열이 0이면 예외를 던짐
+        if(rows == 0 || cols ==0)
+            throw invalid_argument("행 또는 열이 0입니다.");
+
+        for (int i = 0; i < rows; ++i)
+        {
+            for (int j = 0; j < cols; ++j)
+            {
+                is >> map[i][j]; // 파일에서 숫자를 읽어와 저장
+            }
+        }
+    }
+    // 예외 처리
+    catch (exception &e)
+    {
+        cerr << "에러: " << e.what() << endl;
+    }
+    catch (...)
+    {
+        cerr << "에러 발생" << endl;
+    }
 
     // 게임 시작
     while (1)
